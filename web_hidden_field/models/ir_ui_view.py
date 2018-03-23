@@ -29,7 +29,7 @@ class IrUiView(models.Model):
 
     @api.multi
     def _check_safe_mode(self, node):
-        for rescord in self:
+        for record in self:
             modifiers = json.loads(node.get('modifiers'))
             if 'required' in modifiers and modifiers['required']:
                 return True
