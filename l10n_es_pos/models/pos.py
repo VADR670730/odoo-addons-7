@@ -31,6 +31,7 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     simplified_invoice = fields.Char('Simplified invoice', copy=False)
+    refunded = fields.Boolean("Refunded", readonly=True, copy=False, default=False)
 
     @api.model
     def simplified_limit_check(self, pos_order):
@@ -60,6 +61,18 @@ class PosOrder(models.Model):
                                   'prefix.'))
         return order
 
+    @api.multi
+    def refund(self):
+        res = super(PosOrder, self).refund()
+        order = self.browse(res['res_id'])
+        config = order.session_id.config_id
+        number = config.simple_refund_number+1
+        order.simplified_invoice = 'A' + config.simple_invoice_prefix + str(number).zfill(config.simple_invoice_padding)
+        config.set_next_simple_refund_number(order.simplified_invoice)
+        self.refunded = True
+        order.note = _('Rectificativa del ticket %s' % self.simplified_invoice)
+        return res
+
 
 class PosConfig(models.Model):
     _inherit = 'pos.config'
@@ -67,6 +80,8 @@ class PosConfig(models.Model):
     simple_invoice_prefix = fields.Char('Sim.Inv prefix', copy=False)
     simple_invoice_padding = fields.Integer('Sim.Inv padding', default=4)
     simple_invoice_number = fields.Integer('Sim.Inv number', default=0,
+                                           copy=False, readonly=True)
+    simple_refund_number = fields.Integer('Sim.Ref number', default=0,
                                            copy=False, readonly=True)
     simplified_invoice_limit = fields.Float(string='Sim.Inv limit amount',
                                             digits=dp.get_precision('Account'),
@@ -101,3 +116,13 @@ class PosConfig(models.Model):
         number = int(order_number.replace(self.simple_invoice_prefix, ''))
         if number > self.simple_invoice_number:
             self.write({'simple_invoice_number': number})
+
+    def set_next_simple_refund_number(self, order_number):
+        # Fix generated orders with empty simplified invoice prefix
+        order_number = order_number[1:]
+        if 'false' in order_number:
+            order_number = order_number.replace('false',
+                                                self.simple_invoice_prefix)
+        number = int(order_number.replace(self.simple_invoice_prefix, ''))
+        if number > self.simple_refund_number:
+            self.write({'simple_refund_number': number})

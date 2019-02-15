@@ -10,6 +10,7 @@
             <field name="arch" type="xml">
                 <field name="pos_reference" position="after">
                     <field name="simplified_invoice" readonly="1"/>
+                    <field name="refunded" readonly="1"/>
                 </field>
             </field>
         </record>
@@ -25,6 +26,7 @@
                     <separator/>
                     <filter string="Invoices" name="invoices" domain="[('simplified_invoice', '=', False)]"/>
                     <filter string="Simplified invoices" name="invoices" domain="[('simplified_invoice', '!=', False)]"/>
+                    <filter string="Refunded" name="refunded" domain="[('refunded','=',True)]"/>
                 </field>
             </field>
         </record>
@@ -41,6 +43,7 @@
                             <field name="simple_invoice_prefix" placeholder="TPVXXX#" class="oe_inline"/>
                             <field name="simple_invoice_padding" class="oe_inline"/>
                             <field name="simple_invoice_number" class="oe_inline"/>
+                            <field name="simple_refund_number" class="oe_inline"/>
                             <field name="simplified_invoice_limit" class="oe_inline"/>
                         </group>
                     </group>

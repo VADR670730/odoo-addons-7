@@ -58,3 +58,8 @@ msgstr "Factura simplificada:"
 msgid "VAT:"
 msgstr "CIF/NIF:"
 
+#. module: l10n_es_pos
+#: code:addons/l10n_es_pos/models/pos.py:71
+#, python-format
+msgid "Refund from Sale %s"
+msgstr "Devolución de venta %s"
