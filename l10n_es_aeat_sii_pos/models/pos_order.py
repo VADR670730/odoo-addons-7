@@ -462,6 +462,15 @@ class PosOrder(models.Model):
         return res
 
     @api.multi
+    def refund(self):
+        res = super(PosOrder, self).refund()
+        for order in self.browse(res['res_id']):
+            company = order.company_id
+            if company.sii_method == 'auto':
+                order.send_sii()
+        return res
+
+    @api.multi
     def _check_simplified(self):
         """ Request information to AEAT """
         for order in self.filtered(lambda i: i.state in ['done', 'paid']):
