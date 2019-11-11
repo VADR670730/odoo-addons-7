@@ -54,6 +54,7 @@ Contributors
 ------------
 
 * Ignacio Ibeas - Acysos S.L. <ignacio@acysos.com>
+* Rodrigo Colombo - Sistemas de Datos <rcolombo@sdatos.es>
 
 
 Maintainer

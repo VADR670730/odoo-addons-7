@@ -17,15 +17,16 @@
                         The user is always more restrictive that groups.</p>
                    </group>
                    <group name="hidden-template-data">
-                        <field name="name"/>
+                        <field name="model_id"/>
                         <field name="active"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                        <field name="hidden_fields" context="{'template_id':parent.get('name')}">
+                        <field name="hidden_field_id">
                            <tree string="Hidden Fields" editable="bottom">
-                               <field name="name" domain="[('model_id', '=', model)]"/>
-                               <field name="users" widget="many2many_tags"/>
-                               <field name="groups" widget="many2many_tags"/>
-                               <field name="model" invisible="1"/>
+                               <field name="field_id" domain="[('model_id', '=', model_id)]"/>
+                               <field name="readonly"/>
+                               <field name="user_ids" widget="many2many_tags"/>
+                               <field name="group_ids" widget="many2many_tags"/>
+                               <field name="model_id" invisible="1"/>
                                <field name="template_id" invisible="1"/>
                            </tree>
                         </field>
@@ -40,7 +41,7 @@
         <field name="model">hidden.template</field>
         <field name="arch" type="xml">
             <tree string="Hidden Template">
-                 <field name="name"/>
+                 <field name="model_id"/>
                  <field name="company_id" groups="base.group_multi_company"/>
                  <field name="active"/>
             </tree>
