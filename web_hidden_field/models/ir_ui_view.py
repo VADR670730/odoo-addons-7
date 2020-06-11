@@ -64,6 +64,7 @@ class IrUiView(models.Model):
                 modifiers = json.loads(node.get('modifiers'))
                 if self._check_safe_mode(node):
                     modifiers['invisible'] = True
+                    node.set('force_save', '1')
                     orm.transfer_modifiers_to_node(modifiers, node)
                 else:
                     node.getparent().remove(node)
@@ -71,5 +72,6 @@ class IrUiView(models.Model):
             elif self._check_readonly_field(model, node.get('name')):
                 modifiers = json.loads(node.get('modifiers'))
                 modifiers['readonly'] = True
+                node.set('force_save', '1')
                 orm.transfer_modifiers_to_node(modifiers, node)
         return fields
